@@ -9,7 +9,6 @@ def author():
     return 'Isabelle Geller'
 #%%
 import random
-import copy
 import numpy as np
 # %%
 def DrawBoard(Board):
@@ -32,13 +31,13 @@ def DrawBoard(Board):
 
     print('\n')
 
-#%% 
+#%%
 def IsSpaceFree(Board, i ,j):
     '''
     Parameters: Board is the game board, a 3x3 matrix
                 i is the row index, j is the col index
     Return: True or False
-    Description: 
+    Description:
         (1) return True  if Board[i][j] is empty ' '
         (2) return False if Board[i][j] is not empty
         (3) return False if i or j is invalid (e.g. i = -1 or 100)
@@ -75,9 +74,9 @@ def IsBoardFull(Board):
     '''
     Parameter: Board is the game board, a 3x3 matrix
     Return: True or False
-    Description: 
+    Description:
         return True if the Board is fully occupied
-        return False otherwise 
+        return False otherwise
     hint: use GetNumberOfChessPieces
     '''
     if GetNumberOfChessPieces(Board) == 9:
@@ -89,9 +88,9 @@ def IsBoardEmpy(Board):
     '''
     Parameter: Board is the game board, a 3x3 matrix
     Return: True or False
-    Description: 
+    Description:
         return True if the Board is empty
-        return False otherwise 
+        return False otherwise
     hint: use GetNumberOfChessPieces
     '''
     if GetNumberOfChessPieces(Board) == 0:
@@ -101,12 +100,12 @@ def IsBoardEmpy(Board):
 #%%
 def UpdateBoard(Board, Tag, Choice):
     '''
-    Parameters: 
+    Parameters:
         Board is the game board, a 3x3 matrix
         Tag is 'O' or 'X'
         Choice is a tuple (row, col) from HumanPlayer or ComputerPlayer
     Return: None
-    Description: 
+    Description:
          Update the Board after a player makes a choice
          Set an element of the Board to Tag at the location (row, col)
     '''
@@ -117,7 +116,7 @@ def UpdateBoard(Board, Tag, Choice):
 #%%
 def HumanPlayer(Tag, Board):
     '''
-    Parameters: 
+    Parameters:
         Tag is 'X' or 'O'. If Tag is 'X': HumanPlayer is PlayerX who goes first
         Board is the game board, a 3x3 matrix
     Return: ChoiceOfHumanPlayer, it is a tuple (row, col)
@@ -125,7 +124,7 @@ def HumanPlayer(Tag, Board):
         This function will NOT return until it gets a valid input from the user
     Attention:
         Board is NOT modified in this function
-    hint: 
+    hint:
         a while loop is needed, see HumanPlayer in rock-papper-scissors
         the user needs to input row-index and col-index, where a new chess will be placed
         use int() to convert string to int
@@ -172,7 +171,7 @@ def ComputerPlayer(Tag, Board):
     Parameters:
         Tag is 'X' or 'O'. If Tag is 'X': ComputerPlayer is PlayerX who goes first
         Board is the game board, a 3x3 matrix
-    Return: ChoiceOfComputerPlayer, it is a tuple (row, col)   
+    Return: ChoiceOfComputerPlayer, it is a tuple (row, col)
     Description:
         ComputerPlayer will choose an empty spot on the board
         a random strategy in a while loop:
@@ -189,56 +188,72 @@ def ComputerPlayer(Tag, Board):
 
     notTag = 'O' if Tag=='X' else 'X'
     if(IsBoardEmpy(Board)):
-        print('empty')
+        # print('empty')
         return(0, 0)
     else:
         newBoard = np.transpose(Board).tolist()
-        coord = (None, None)
-        coordSet = False
-        for x in range(0, 3, 1):
-            if(coordSet == False):
-                diagonal1 = [Board[0][0], Board[1][1], Board[2][2]]
-                diagonal2 = [Board[0][2], Board[1][1], Board[2][0]]
-                if Board[x].count(Tag) == 2 and Board[x].__contains__(' '):
-                    coord = (x, Board[x].index(' '))
-                elif newBoard[x].count(Tag) == 2 and newBoard[x].__contains__(' '):
-                    coord = (newBoard[x].index(' '), x)
-                elif diagonal1.count(Tag) == 2 and diagonal1.__contains__(' '):
-                    coord = diagonal1Coord[diagonal1.index(' ')]
-                elif diagonal2.count(Tag) == 2 and diagonal1.__contains__(' '):
-                    coord = diagonal2Coord[diagonal2.index(' ')]
-                if coord != (None, None):
-                    coordSet = True
-                    break;
 
         for x in range(0, 3, 1):
-            if (coordSet == False):
-                diagonal1 = [Board[0][0], Board[1][1], Board[2][2]]
-                diagonal2 = [Board[0][2], Board[1][1], Board[2][0]]
-                if Board[x].count(notTag) == 2:
-                    coord = (x, Board[x].index(' '))
-                elif newBoard[x].count(notTag) == 2:
-                    coord = (newBoard[x].index(' '), x)
-                elif diagonal1.count(notTag) == 2 and diagonal1.__contains__(' '):
-                    coord = diagonal1Coord[diagonal1.index(' ')]
-                elif diagonal2.count(notTag) == 2 and diagonal2.__contains__(' '):
-                    coord = diagonal2Coord[diagonal2.index(' ')]
-                elif Board[x].count(notTag) == 1 and Board[x].count(notTag) == 0:
-                    coord = (x, Board[x].index(' '))
-                elif newBoard[x].count(notTag) == 1 and Board[x].count(notTag) == 0:
-                    coord = (newBoard[x].index(' '), x)
-                elif diagonal1.count(notTag) == 1 and diagonal1.count(Tag) == 0 and diagonal1.__contains__(' '):
-                    coord = diagonal1Coord[diagonal1.index(' ')]
-                elif diagonal2.count(notTag) == 1 and diagonal2.count(Tag) == 0 and diagonal2.__contains__(' '):
-                    coord = diagonal2Coord[diagonal2.index(' ')]
-                else:
-                    coord = ComputerPlayerRand(Tag, Board)
-                if coord != (None, None):
-                    coordSet = True
-                    break;
-    print('ComputerPlayer({}) has made the choice'.format(Tag))
-    return coord
+            diagonal1 = [Board[0][0], Board[1][1], Board[2][2]]
+            diagonal2 = [Board[0][2], Board[1][1], Board[2][0]]
 
+            if Board[x].count(Tag) == 2 and Board[x].__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return (x, Board[x].index(' '))
+            elif newBoard[x].count(Tag) == 2 and newBoard[x].__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return (newBoard[x].index(' '), x)
+
+            elif diagonal1.count(Tag) == 2 and diagonal1.__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return diagonal1Coord[diagonal1.index(' ')]
+
+            elif diagonal2.count(Tag) == 2 and diagonal1.__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return diagonal2Coord[diagonal2.index(' ')]
+
+        for x in range(0, 3, 1):
+            diagonal1 = [Board[0][0], Board[1][1], Board[2][2]]
+            diagonal2 = [Board[0][2], Board[1][1], Board[2][0]]
+
+            if Board[x].count(notTag) == 2 and Board[x].__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return (x, Board[x].index(' '))
+
+            elif newBoard[x].count(notTag) == 2 and newBoard[x].__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return (newBoard[x].index(' '), x)
+
+            elif diagonal1.count(notTag) == 2 and diagonal1.__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return diagonal1Coord[diagonal1.index(' ')]
+
+            elif diagonal2.count(notTag) == 2 and diagonal2.__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return diagonal2Coord[diagonal2.index(' ')]
+
+        for x in range(0, 3, 1):
+            diagonal1 = [Board[0][0], Board[1][1], Board[2][2]]
+            diagonal2 = [Board[0][2], Board[1][1], Board[2][0]]
+
+            if Board[x].count(notTag) == 1 and Board[x].count(Tag) == 0 and Board[x].__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return (x, Board[x].index(' '))
+
+            elif newBoard[x].count(notTag) == 1 and newBoard[x].count(Tag) == 0 and newBoard[x].__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return (newBoard[x].index(' '), x)
+
+            elif diagonal1.count(notTag) == 1 and diagonal1.count(Tag) == 0 and diagonal1.__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return diagonal1Coord[diagonal1.index(' ')]
+
+            elif diagonal2.count(notTag) == 1 and diagonal2.count(Tag) == 0 and diagonal2.__contains__(' '):
+                print('ComputerPlayer({}) has made the choice'.format(Tag))
+                return diagonal2Coord[diagonal2.index(' ')]
+
+        print('ComputerPlayer({}) has made the choice'.format(Tag))
+        return ComputerPlayerRand(Tag, Board)
 #%%
 
 def ComputerPlayerRand(Tag, Board):
@@ -263,7 +278,6 @@ def ComputerPlayerRand(Tag, Board):
         row = random.randint(0, 3)
         col = random.randint(0, 3)
 
-    print('ComputerPlayer({}) has made the choice'.format(Tag))
     return (row, col)
 
 def Judge(Board):
@@ -318,13 +332,13 @@ def ShowOutcome(Outcome, NameX, NameO):
     Parameters:
         Outcome is from Judge
         NameX is the name of PlayerX who goes first at the beginning
-        NameO is the name of PlayerO 
+        NameO is the name of PlayerO
     Return: None
     Description:
         print a meassage about the Outcome
         NameX/NameO may be 'human' or 'computer'
     hint: the message could be
-        PlayerX (NameX, X) wins 
+        PlayerX (NameX, X) wins
         PlayerO (NameO, O) wins
         the game is still in progress
         it is a tie
